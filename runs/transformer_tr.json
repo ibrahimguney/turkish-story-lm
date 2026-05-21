@@ -1,0 +1,18 @@
+{
+  "model": "runs\\transformer_tr.pt",
+  "config": {
+    "vocab_size": 49,
+    "block_size": 96,
+    "n_embd": 64,
+    "n_head": 4,
+    "n_layer": 2,
+    "dropout": 0.1
+  },
+  "training": {
+    "steps": 500,
+    "batch_size": 8,
+    "lr": 0.0003,
+    "device": "cpu"
+  },
+  "vocab_size": 49
+}
