@@ -1,16 +1,16 @@
-# Turkce Hikaye Dil Modeli
+# Türkçe Hikaye Dil Modeli
 
-Bu proje, Turkce hikayelerden sifirdan egitilen kucuk bir dil modeli laboratuvaridir. Amac iki yonludur:
+Bu proje, Türkçe hikayelerden sıfırdan eğitilen küçük bir dil modeli laboratuvarıdır. Amaç iki yönlüdür:
 
-1. Dil modeli egitiminin temel fikirlerini temiz ve okunabilir kodla ogrenmek.
-2. Turkce hikaye uretimi uzerine bir arastirma bildirisi icin deney zemini kurmak.
+1. Dil modeli eğitiminin temel fikirlerini temiz ve okunabilir kodla öğrenmek.
+2. Türkçe hikaye üretimi üzerine bir araştırma bildirisi için deney zemini kurmak.
 
-Projede iki model vardir:
+Projede iki model vardır:
 
-- **N-gram dil modeli**: Bagimliliksiz, seffaf ve hizli bir temel model. Karakterleri onceki karakterlere bakarak tahmin eder.
-- **Mini Transformer**: PyTorch ile yazilmis kucuk bir sinir agi modeli. Ayni veri uzerinde n-gram yaklasimiyla karsilastirma yapmak icin eklenmistir.
+- **N-gram dil modeli**: Bağımlılıksız, şeffaf ve hızlı bir temel model. Karakterleri önceki karakterlere bakarak tahmin eder.
+- **Mini Transformer**: PyTorch ile yazılmış küçük bir sinir ağı modeli. Aynı veri üzerinde n-gram yaklaşımıyla karşılaştırma yapmak için eklenmiştir.
 
-Yerel web arayuzu sayesinde modelleri tarayicidan deneyebilir, prompt yazip hikaye uretimi yapabilirsiniz.
+Yerel web arayüzü sayesinde modelleri tarayıcıdan deneyebilir, prompt yazıp hikaye üretimi yapabilirsiniz.
 
 ## Kurulum
 
@@ -22,69 +22,69 @@ python -m venv .venv
 python -m pip install -e .
 ```
 
-Transformer deneyleri icin PyTorch gerekir:
+Transformer deneyleri için PyTorch gerekir:
 
 ```bash
 python -m pip install -e .[transformer]
 ```
 
-Paket kurmadan da komutlari `python scripts/...` seklinde calistirabilirsiniz. Betikler kendi iclerinde `src/` klasorunu Python yoluna ekler.
+Paket kurmadan da komutları `python scripts/...` şeklinde çalıştırabilirsiniz. Betikler kendi içlerinde `src/` klasörünü Python yoluna ekler.
 
-## Hizli Baslangic
+## Hızlı Başlangıç
 
-N-gram modelini mini Turkce hikaye derlemiyle egitin:
+N-gram modelini mini Türkçe hikaye derlemiyle eğitin:
 
 ```bash
 python scripts/train_ngram.py --data data/stories/tr_mini_stories.txt --out runs/ngram_tr.json --order 7 --alpha 0.001
 ```
 
-N-gram ile metin uretin:
+N-gram ile metin üretin:
 
 ```bash
 python scripts/generate.py --model runs/ngram_tr.json --prompt Bir sabah --length 600 --temperature 0.7 --top-k 8 --out runs/ornek_hikaye.txt
 ```
 
-N-gram modelini degerlendirin:
+N-gram modelini değerlendirin:
 
 ```bash
 python scripts/evaluate.py --model runs/ngram_tr.json --data data/stories/tr_mini_stories.txt
 ```
 
-Transformer egitin:
+Transformer eğitin:
 
 ```bash
 python scripts/train_transformer.py --data data/stories/tr_mini_stories.txt --out runs/transformer_tr.pt --steps 500
 ```
 
-Transformer ile metin uretin:
+Transformer ile metin üretin:
 
 ```bash
 python scripts/generate_transformer.py --model runs/transformer_tr.pt --prompt Bir sabah --length 600 --temperature 0.8 --top-k 8 --out runs/transformer_ornek_hikaye.txt
 ```
 
-Transformer'i degerlendirin:
+Transformer'ı değerlendirin:
 
 ```bash
 python scripts/evaluate_transformer.py --model runs/transformer_tr.pt --data data/stories/tr_mini_stories.txt
 ```
 
-Yerel web arayuzunu acin:
+Yerel web arayüzünü açın:
 
 ```bash
 python scripts/serve_web.py --port 7860
 ```
 
-Tarayicida `http://127.0.0.1:7860` adresine gidin.
+Tarayıcıda `http://127.0.0.1:7860` adresine gidin.
 
-Sunucu acikken hizli API testi:
+Sunucu açıkken hızlı API testi:
 
 ```bash
 python scripts/smoke_web.py
 ```
 
-## Veri Akisi
+## Veri Akışı
 
-Projedeki temel akis soyledir:
+Projedeki temel akış şöyledir:
 
 ```text
 data/stories/tr_mini_stories.txt
@@ -96,172 +96,172 @@ scripts/train_ngram.py veya scripts/train_transformer.py
 runs/ngram_tr.json veya runs/transformer_tr.pt
         |
         v
-scripts/generate*.py, scripts/evaluate*.py veya web arayuzu
+scripts/generate*.py, scripts/evaluate*.py veya web arayüzü
 ```
 
-Veri dosyasi paragraflara ayrilmis kisa Turkce hikayelerden olusur. N-gram modelinde bu paragraflar ayri hikayeler olarak ele alinir. Transformer modelinde dosyanin tamamindaki karakter dizisi egitim verisi olarak kullanilir.
+Veri dosyası paragraflara ayrılmış kısa Türkçe hikayelerden oluşur. N-gram modelinde bu paragraflar ayrı hikayeler olarak ele alınır. Transformer modelinde dosyanın tamamındaki karakter dizisi eğitim verisi olarak kullanılır.
 
-## Proje Yapisi
+## Proje Yapısı
 
-- `data/stories/tr_mini_stories.txt`: Baslangic icin kisa, ozgun Turkce hikayeler.
-- `src/turkish_story_lm/tokenizer.py`: Karakter duzeyi tokenizer.
-- `src/turkish_story_lm/ngram.py`: Sifirdan yazilmis n-gram dil modeli.
-- `src/turkish_story_lm/transformer.py`: Kucuk karakter duzeyi Transformer modeli.
-- `scripts/train_ngram.py`: N-gram egitim betigi.
-- `scripts/generate.py`: N-gram hikaye uretim betigi.
-- `scripts/evaluate.py`: N-gram icin ortalama negatif log olabilirlik ve perplexity.
-- `scripts/train_transformer.py`: PyTorch Transformer egitim betigi.
-- `scripts/generate_transformer.py`: Transformer ile hikaye uretimi.
-- `scripts/evaluate_transformer.py`: Transformer icin kayip ve perplexity.
-- `scripts/serve_web.py`: Yerel web arayuzu ve JSON API.
-- `scripts/smoke_web.py`: Yerel web API icin hizli kontrol.
-- `web/`: Tarayicida calisan hikaye uretim arayuzu.
-- `research/bildiri_zemini.md`: Arastirma bildirisi icin problem, deneyler ve taslak.
-- `research/deney_notlari.md`: Ilk deney sonuclari ve yorumlar.
-- `runs/`: Egitilmis modeller ve uretilmis ornekler.
+- `data/stories/tr_mini_stories.txt`: Başlangıç için kısa, özgün Türkçe hikayeler.
+- `src/turkish_story_lm/tokenizer.py`: Karakter düzeyi tokenizer.
+- `src/turkish_story_lm/ngram.py`: Sıfırdan yazılmış n-gram dil modeli.
+- `src/turkish_story_lm/transformer.py`: Küçük karakter düzeyi Transformer modeli.
+- `scripts/train_ngram.py`: N-gram eğitim betiği.
+- `scripts/generate.py`: N-gram hikaye üretim betiği.
+- `scripts/evaluate.py`: N-gram için ortalama negatif log olabilirlik ve perplexity.
+- `scripts/train_transformer.py`: PyTorch Transformer eğitim betiği.
+- `scripts/generate_transformer.py`: Transformer ile hikaye üretimi.
+- `scripts/evaluate_transformer.py`: Transformer için kayıp ve perplexity.
+- `scripts/serve_web.py`: Yerel web arayüzü ve JSON API.
+- `scripts/smoke_web.py`: Yerel web API için hızlı kontrol.
+- `web/`: Tarayıcıda çalışan hikaye üretim arayüzü.
+- `research/bildiri_zemini.md`: Araştırma bildirisi için problem, deneyler ve taslak.
+- `research/deney_notlari.md`: İlk deney sonuçları ve yorumlar.
+- `runs/`: Eğitilmiş modeller ve üretilmiş örnekler.
 
-## Kodlar Nasil Calisiyor?
+## Kodlar Nasıl Çalışıyor?
 
 ### `tokenizer.py`
 
-Bu dosya karakter duzeyinde basit bir tokenizer tanimlar.
+Bu dosya karakter düzeyinde basit bir tokenizer tanımlar.
 
 Temel fikir:
 
 - `CharTokenizer.train(text)` metindeki benzersiz karakterleri bulur.
-- `encode(text)` her karakteri sayisal kimlige cevirir.
-- `decode(token_ids)` sayisal kimlikleri tekrar metne cevirir.
-- Turkce karakterler ayri isleme tabi tutulmaz; Python stringleri Unicode destekledigi icin dogrudan korunur.
+- `encode(text)` her karakteri sayısal kimliğe çevirir.
+- `decode(token_ids)` sayısal kimlikleri tekrar metne çevirir.
+- Türkçe karakterler ayrı işleme tabi tutulmaz; Python stringleri Unicode desteklediği için doğrudan korunur.
 
-Bu proje sozcuk veya alt-sozcuk tokenizer kullanmaz. Bunun nedeni, dil modeli mantigini en sade haliyle gostermektir.
+Bu proje sözcük veya alt-sözcük tokenizer kullanmaz. Bunun nedeni, dil modeli mantığını en sade haliyle göstermektir.
 
 ### `ngram.py`
 
-Bu dosya karakter duzeyi n-gram dil modelini icerir.
+Bu dosya karakter düzeyi n-gram dil modelini içerir.
 
-N-gram modeli su soruyu cevaplar:
-
-```text
-Onceki n-1 karakteri gordugumde siradaki karakter ne olabilir?
-```
-
-Ornek:
+N-gram modeli şu soruyu cevaplar:
 
 ```text
-Baglam: "Bir saba"
-Siradaki karakter adaylari: "h", "n", "r", ...
+Önceki n-1 karakteri gördüğümde sıradaki karakter ne olabilir?
 ```
 
-Modelin ana bolumleri:
+Örnek:
 
-- `fit(texts)`: Egitim metinlerinden baglam-karakter sayimlari cikarir.
-- `next_token_distribution(context)`: Verilen baglam icin sonraki karakter olasiliklarini hesaplar.
-- `generate(...)`: Olasiliklara gore karakter secerek metni uzatir.
-- `negative_log_likelihood(text)`: Modelin bir metni ne kadar iyi tahmin ettigini olcer.
-- `perplexity(text)`: Dil modellemede yaygin kullanilan okunabilirlik/olasilik metriğini verir.
+```text
+Bağlam: "Bir saba"
+Sıradaki karakter adayları: "h", "n", "r", ...
+```
 
-Model her karakter icin yalnizca en uzun baglami degil, daha kisa baglamlari da kaydeder. Bu onemlidir; cunku kullanici egitim verisinde aynen gecmeyen bir prompt yazdiginda model tamamen rastgele secime dusmez. Uzun baglam bulunamazsa daha kisa baglamlarla tahmin yapar.
+Modelin ana bölümleri:
 
-`alpha` parametresi additive smoothing icindir. Yani modelin az gorulen veya hic gorulmeyen karakterlere sifir olasilik vermesini engeller.
+- `fit(texts)`: Eğitim metinlerinden bağlam-karakter sayımları çıkarır.
+- `next_token_distribution(context)`: Verilen bağlam için sonraki karakter olasılıklarını hesaplar.
+- `generate(...)`: Olasılıklara göre karakter seçerek metni uzatır.
+- `negative_log_likelihood(text)`: Modelin bir metni ne kadar iyi tahmin ettiğini ölçer.
+- `perplexity(text)`: Dil modellemede yaygın kullanılan okunabilirlik/olasılık metriğini verir.
 
-`top_k` parametresi uretim sirasinda sadece en olasi `k` karakter arasindan secim yapar. Bu, kucuk veriyle calisirken anlamsiz noktalama veya rastgele karakter cikma riskini azaltir.
+Model her karakter için yalnızca en uzun bağlamı değil, daha kısa bağlamları da kaydeder. Bu önemlidir; çünkü kullanıcı eğitim verisinde aynen geçmeyen bir prompt yazdığında model tamamen rastgele seçime düşmez. Uzun bağlam bulunamazsa daha kısa bağlamlarla tahmin yapar.
+
+`alpha` parametresi additive smoothing içindir. Yani modelin az görülen veya hiç görülmeyen karakterlere sıfır olasılık vermesini engeller.
+
+`top_k` parametresi üretim sırasında sadece en olası `k` karakter arasından seçim yapar. Bu, küçük veriyle çalışırken anlamsız noktalama veya rastgele karakter çıkma riskini azaltır.
 
 ### `transformer.py`
 
-Bu dosya kucuk bir causal Transformer dil modeli tanimlar.
+Bu dosya küçük bir causal Transformer dil modeli tanımlar.
 
-Modelin temel parcalari:
+Modelin temel parçaları:
 
-- `TransformerConfig`: Model boyutlarini tutan ayar sinifi.
-- `TinyTransformerLM`: PyTorch `nn.Module` olarak yazilmis dil modeli.
-- `token_embedding`: Karakter kimliklerini vektore cevirir.
-- `position_embedding`: Karakterlerin siradaki konum bilgisini modele ekler.
-- `TransformerEncoderLayer`: Self-attention ve feed-forward katmanlari.
-- `head`: Son vektorleri karakter olasiliklarina ceviren lineer katman.
+- `TransformerConfig`: Model boyutlarını tutan ayar sınıfı.
+- `TinyTransformerLM`: PyTorch `nn.Module` olarak yazılmış dil modeli.
+- `token_embedding`: Karakter kimliklerini vektöre çevirir.
+- `position_embedding`: Karakterlerin sıradaki konum bilgisini modele ekler.
+- `TransformerEncoderLayer`: Self-attention ve feed-forward katmanları.
+- `head`: Son vektörleri karakter olasılıklarına çeviren lineer katman.
 
-Bu model causal maske kullanir. Yani model, siradaki karakteri tahmin ederken gelecekteki karakterleri goremez. Bu davranis dil modeli egitimi icin gereklidir.
+Bu model causal maske kullanır. Yani model, sıradaki karakteri tahmin ederken gelecekteki karakterleri göremez. Bu davranış dil modeli eğitimi için gereklidir.
 
-`generate(...)` fonksiyonu n-gram modelindeki gibi prompttan baslar, sonra karakterleri tek tek uretir. Sicaklik ve top-k ayarlari burada da kullanilir.
+`generate(...)` fonksiyonu n-gram modelindeki gibi prompttan başlar, sonra karakterleri tek tek üretir. Sıcaklık ve top-k ayarları burada da kullanılır.
 
-Mini veri kumesinde Transformer'in n-gramdan daha zayif gorunmesi normaldir. Transformer daha esnek bir modeldir, fakat iyi sonuc icin daha fazla veri ve daha uzun egitim ister.
+Mini veri kümesinde Transformer'ın n-gramdan daha zayıf görünmesi normaldir. Transformer daha esnek bir modeldir, fakat iyi sonuç için daha fazla veri ve daha uzun eğitim ister.
 
 ## Betikler
 
 ### `scripts/train_ngram.py`
 
-Bu betik n-gram modelini egitir.
+Bu betik n-gram modelini eğitir.
 
-Is akisi:
+İş akışı:
 
-1. `--data` ile verilen hikaye dosyasini okur.
-2. Bos satirlara gore hikayeleri ayirir.
-3. `NGramLanguageModel(order, alpha)` olusturur.
-4. `fit(stories)` ile karakter baglamlarini sayar.
+1. `--data` ile verilen hikaye dosyasını okur.
+2. Boş satırlara göre hikayeleri ayırır.
+3. `NGramLanguageModel(order, alpha)` oluşturur.
+4. `fit(stories)` ile karakter bağlamlarını sayar.
 5. Modeli `--out` konumuna JSON olarak kaydeder.
 
-Cikti dosyasi insan tarafindan okunabilir JSON'dur. Bu, n-gram modelin nasil sayim yaptigini incelemek icin faydalidir.
+Çıktı dosyası insan tarafından okunabilir JSON'dur. Bu, n-gram modelin nasıl sayım yaptığını incelemek için faydalıdır.
 
 ### `scripts/generate.py`
 
-Bu betik egitilmis n-gram modelinden hikaye uretir.
+Bu betik eğitilmiş n-gram modelinden hikaye üretir.
 
-Onemli parametreler:
+Önemli parametreler:
 
-- `--prompt`: Hikayenin baslangic metni.
-- `--length`: Uretilecek en fazla yeni karakter sayisi.
-- `--temperature`: Dusuk deger daha guvenli, yuksek deger daha cesur uretim verir.
-- `--top-k`: Her adimda en olasi kac karakter arasindan secim yapilacagi.
-- `--seed`: Ayni ayarlarla tekrar edilebilir uretim saglar.
+- `--prompt`: Hikayenin başlangıç metni.
+- `--length`: Üretilecek en fazla yeni karakter sayısı.
+- `--temperature`: Düşük değer daha güvenli, yüksek değer daha cesur üretim verir.
+- `--top-k`: Her adımda en olası kaç karakter arasından seçim yapılacağı.
+- `--seed`: Aynı ayarlarla tekrar edilebilir üretim sağlar.
 - `--out`: Sonucu dosyaya kaydeder.
 
 ### `scripts/evaluate.py`
 
-Bu betik n-gram modelini veri dosyasi uzerinde degerlendirir.
+Bu betik n-gram modelini veri dosyası üzerinde değerlendirir.
 
-Raporladigi degerler:
+Raporladığı değerler:
 
-- `mean_nll`: Ortalama negatif log olabilirlik. Dusuk olmasi daha iyidir.
-- `mean_perplexity`: Modelin tahmin belirsizligini ozetler. Dusuk olmasi daha iyidir.
+- `mean_nll`: Ortalama negatif log olabilirlik. Düşük olması daha iyidir.
+- `mean_perplexity`: Modelin tahmin belirsizliğini özetler. Düşük olması daha iyidir.
 
-Mini veri uzerinde cok dusuk perplexity ezberleme anlamina gelebilir. Bu nedenle metrikleri insan degerlendirmesiyle birlikte yorumlamak gerekir.
+Mini veri üzerinde çok düşük perplexity ezberleme anlamına gelebilir. Bu nedenle metrikleri insan değerlendirmesiyle birlikte yorumlamak gerekir.
 
 ### `scripts/train_transformer.py`
 
-Bu betik Transformer modelini egitir.
+Bu betik Transformer modelini eğitir.
 
-Is akisi:
+İş akışı:
 
-1. Veri dosyasini okur.
-2. `CharTokenizer` ile karakterleri sayisal kimliklere cevirir.
-3. Rastgele mini-batch'ler olusturur.
-4. Modelin siradaki karakteri tahmin etmesini ister.
-5. Cross entropy loss ile hatayi hesaplar.
-6. AdamW optimizer ile agirliklari gunceller.
-7. Modeli `runs/transformer_tr.pt` dosyasina kaydeder.
+1. Veri dosyasını okur.
+2. `CharTokenizer` ile karakterleri sayısal kimliklere çevirir.
+3. Rastgele mini-batch'ler oluşturur.
+4. Modelin sıradaki karakteri tahmin etmesini ister.
+5. Cross entropy loss ile hatayı hesaplar.
+6. AdamW optimizer ile ağırlıkları günceller.
+7. Modeli `runs/transformer_tr.pt` dosyasına kaydeder.
 
-Kaydedilen `.pt` dosyasi sunlari icerir:
+Kaydedilen `.pt` dosyası şunları içerir:
 
-- Model ayarlari.
-- Tokenizer sozlugu.
-- Model agirliklari.
-- Egitim meta verisi.
+- Model ayarları.
+- Tokenizer sözlüğü.
+- Model ağırlıkları.
+- Eğitim meta verisi.
 
 ### `scripts/generate_transformer.py`
 
-Bu betik egitilmis Transformer modelinden metin uretir. `generate.py` ile benzer parametrelere sahiptir, fakat model dosyasi `.pt` formatindadir.
+Bu betik eğitilmiş Transformer modelinden metin üretir. `generate.py` ile benzer parametrelere sahiptir, fakat model dosyası `.pt` formatındadır.
 
 ### `scripts/evaluate_transformer.py`
 
-Bu betik Transformer modelini sabit uzunluklu parcalar uzerinden degerlendirir. Her parca icin siradaki karakter tahmin kaybi hesaplanir ve ortalamasi raporlanir.
+Bu betik Transformer modelini sabit uzunluklu parçalar üzerinden değerlendirir. Her parça için sıradaki karakter tahmin kaybı hesaplanır ve ortalaması raporlanır.
 
 ### `scripts/serve_web.py`
 
-Bu betik yerel web uygulamasini baslatir.
+Bu betik yerel web uygulamasını başlatır.
 
-Iki is yapar:
+İki iş yapar:
 
-- `web/` klasorundeki HTML, CSS ve JavaScript dosyalarini sunar.
-- `/api/generate` ve `/api/models` endpoint'lerini saglar.
+- `web/` klasöründeki HTML, CSS ve JavaScript dosyalarını sunar.
+- `/api/generate` ve `/api/models` endpoint'lerini sağlar.
 
 Endpointler:
 
@@ -270,7 +270,7 @@ GET  /api/models
 POST /api/generate
 ```
 
-`POST /api/generate` su alanlari alir:
+`POST /api/generate` şu alanları alır:
 
 ```json
 {
@@ -285,55 +285,55 @@ POST /api/generate
 
 ### `scripts/smoke_web.py`
 
-Sunucu acikken API'nin calisip calismadigini hizlica kontrol eder. Once modellerin mevcut olup olmadigini sorar, sonra kisa bir n-gram uretim istegi yollar.
+Sunucu açıkken API'nin çalışıp çalışmadığını hızlıca kontrol eder. Önce modellerin mevcut olup olmadığını sorar, sonra kısa bir n-gram üretim isteği yollar.
 
-## Web Arayuzu
+## Web Arayüzü
 
-`web/` klasoru tek sayfalik bir arayuz icerir.
+`web/` klasörü tek sayfalık bir arayüz içerir.
 
-- `web/index.html`: Sayfa iskeleti ve form alanlari.
-- `web/styles.css`: Gorsel tasarim.
+- `web/index.html`: Sayfa iskeleti ve form alanları.
+- `web/styles.css`: Görsel tasarım.
 - `web/app.js`: Formdan verileri okur, API'ye istek atar ve sonucu ekrana yazar.
 
-Arayuzde su ayarlar degistirilebilir:
+Arayüzde şu ayarlar değiştirilebilir:
 
 - Prompt.
-- Model secimi.
-- Uretim uzunlugu.
-- Sicaklik.
+- Model seçimi.
+- Üretim uzunluğu.
+- Sıcaklık.
 - Top-k.
 - Seed.
 
-## Model Ciktilarini Nasil Yorumlamali?
+## Model Çıktılarını Nasıl Yorumlamalı?
 
-Bu proje buyuk bir uretken yapay zeka sistemi degildir. Bilerek kucuk tutulmustur. Bu nedenle ciktilar su sekilde yorumlanmalidir:
+Bu proje büyük bir üretken yapay zeka sistemi değildir. Bilerek küçük tutulmuştur. Bu nedenle çıktılar şu şekilde yorumlanmalıdır:
 
-- N-gram modeli kucuk veri uzerinde daha okunur ciktilar verebilir, cunku yerel karakter baglamlarini ezberler.
-- Transformer daha guclu bir mimaridir, fakat mini veri kumesinde yeterince ogrenemez.
-- Dusuk perplexity her zaman iyi yaraticilik anlamina gelmez; ozellikle kucuk veri kumesinde ezberleme belirtisi olabilir.
-- Daha iyi hikaye uretimi icin veri kumesi buyutulmalidir.
+- N-gram modeli küçük veri üzerinde daha okunur çıktılar verebilir, çünkü yerel karakter bağlamlarını ezberler.
+- Transformer daha güçlü bir mimaridir, fakat mini veri kümesinde yeterince öğrenemez.
+- Düşük perplexity her zaman iyi yaratıcılık anlamına gelmez; özellikle küçük veri kümesinde ezberleme belirtisi olabilir.
+- Daha iyi hikaye üretimi için veri kümesi büyütülmelidir.
 
 ## Deney Fikirleri
 
-- N-gram derecesi: 3, 5, 7 karsilastirmasi.
-- Sicaklik ve top-k: `0.6`, `0.9`, `1.2` ile `top-k=4/8/16` degerlerinin akiciliga etkisi.
-- Veri boyutu: Mini derlem yerine daha genis, lisansli Turkce hikayelerle egitim.
-- Degerlendirme: Perplexity yaninda insan degerlendirmesi, tekrar orani ve Turkce karakter hatalari.
-- Model ailesi: N-gram ile mini Transformer'i ayni promptlar ve insan degerlendirmesiyle karsilastirma.
-- Prompt hassasiyeti: Egitim verisinde gecen ve gecmeyen baslangiclarin cikti kalitesine etkisi.
+- N-gram derecesi: 3, 5, 7 karşılaştırması.
+- Sıcaklık ve top-k: `0.6`, `0.9`, `1.2` ile `top-k=4/8/16` değerlerinin akıcılığa etkisi.
+- Veri boyutu: Mini derlem yerine daha geniş, lisanslı Türkçe hikayelerle eğitim.
+- Değerlendirme: Perplexity yanında insan değerlendirmesi, tekrar oranı ve Türkçe karakter hataları.
+- Model ailesi: N-gram ile mini Transformer'ı aynı promptlar ve insan değerlendirmesiyle karşılaştırma.
+- Prompt hassasiyeti: Eğitim verisinde geçen ve geçmeyen başlangıçların çıktı kalitesine etkisi.
 
-## Arastirma Bildirisi Icin Baslik Onerisi
+## Araştırma Bildirisi İçin Başlık Önerisi
 
-> Kucuk Veri Kumesiyle Turkce Hikaye Uretimi: Karakter Duzeyi N-gram ve Mini Transformer Karsilastirmasi
+> Küçük Veri Kümesiyle Türkçe Hikaye Üretimi: Karakter Düzeyi N-gram ve Mini Transformer Karşılaştırması
 
-Bu baslik altinda proje su noktalari tartisabilir:
+Bu başlık altında proje şu noktaları tartışabilir:
 
-- Turkce karakter duzeyi modellemenin avantajlari ve sinirlari.
-- Kucuk veri kumesinde klasik olasiliksal modellerin davranisi.
-- Transformer mimarisinin veri ihtiyaci.
-- Perplexity ile insan degerlendirmesi arasindaki fark.
-- Egitim verisi boyutunun uretim kalitesine etkisi.
+- Türkçe karakter düzeyi modellemenin avantajları ve sınırları.
+- Küçük veri kümesinde klasik olasılıksal modellerin davranışı.
+- Transformer mimarisinin veri ihtiyacı.
+- Perplexity ile insan değerlendirmesi arasındaki fark.
+- Eğitim verisi boyutunun üretim kalitesine etkisi.
 
 ## Not
 
-Bu derlem ornek amaclidir ve tamamiyla bu proje icin yazilmis kisa metinlerden olusur. Bildiri veya yayin icin daha buyuk ve lisansi acik bir veri kumesiyle deneyleri tekrarlamak gerekir.
+Bu derlem örnek amaçlıdır ve tamamıyla bu proje için yazılmış kısa metinlerden oluşur. Bildiri veya yayın için daha büyük ve lisansı açık bir veri kümesiyle deneyleri tekrarlamak gerekir.
