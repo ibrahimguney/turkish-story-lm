@@ -38,10 +38,22 @@ N-gram modelini mini Türkçe hikaye derlemiyle eğitin:
 python scripts/train_ngram.py --data data/stories/tr_mini_stories.txt --out runs/ngram_tr.json --order 7 --alpha 0.001
 ```
 
+Ömer Seyfettin hikayeleriyle daha büyük n-gram modelini eğitin:
+
+```bash
+python scripts/train_ngram.py --data data/stories/omer_seyfettin_hikayeleri.txt --out runs/ngram_omer_seyfettin.json --order 7 --alpha 0.001
+```
+
 N-gram ile metin üretin:
 
 ```bash
 python scripts/generate.py --model runs/ngram_tr.json --prompt Bir sabah --length 600 --temperature 0.7 --top-k 8 --out runs/ornek_hikaye.txt
+```
+
+Ömer Seyfettin modeliyle metin üretin:
+
+```bash
+python scripts/generate.py --model runs/ngram_omer_seyfettin.json --prompt Bir sabah --length 600 --temperature 0.75 --top-k 12 --out runs/omer_seyfettin_ornek_hikaye.txt
 ```
 
 N-gram modelini değerlendirin:
@@ -99,11 +111,12 @@ runs/ngram_tr.json veya runs/transformer_tr.pt
 scripts/generate*.py, scripts/evaluate*.py veya web arayüzü
 ```
 
-Veri dosyası paragraflara ayrılmış kısa Türkçe hikayelerden oluşur. N-gram modelinde bu paragraflar ayrı hikayeler olarak ele alınır. Transformer modelinde dosyanın tamamındaki karakter dizisi eğitim verisi olarak kullanılır.
+Veri dosyaları paragraflara ayrılmış kısa Türkçe hikayelerden oluşur. N-gram modelinde bu paragraflar ayrı hikayeler olarak ele alınır. Transformer modelinde dosyanın tamamındaki karakter dizisi eğitim verisi olarak kullanılır.
 
 ## Proje Yapısı
 
 - `data/stories/tr_mini_stories.txt`: Başlangıç için kısa, özgün Türkçe hikayeler.
+- `data/stories/omer_seyfettin_hikayeleri.txt`: Ömer Seyfettin hikayelerinden oluşan daha büyük eğitim dosyası.
 - `src/turkish_story_lm/tokenizer.py`: Karakter düzeyi tokenizer.
 - `src/turkish_story_lm/ngram.py`: Sıfırdan yazılmış n-gram dil modeli.
 - `src/turkish_story_lm/transformer.py`: Küçük karakter düzeyi Transformer modeli.
@@ -317,7 +330,7 @@ Bu proje büyük bir üretken yapay zeka sistemi değildir. Bilerek küçük tut
 
 - N-gram derecesi: 3, 5, 7 karşılaştırması.
 - Sıcaklık ve top-k: `0.6`, `0.9`, `1.2` ile `top-k=4/8/16` değerlerinin akıcılığa etkisi.
-- Veri boyutu: Mini derlem yerine daha geniş, lisanslı Türkçe hikayelerle eğitim.
+- Veri boyutu: Mini derlem, Ömer Seyfettin derlemi ve daha geniş lisanslı Türkçe hikayelerle eğitim.
 - Değerlendirme: Perplexity yanında insan değerlendirmesi, tekrar oranı ve Türkçe karakter hataları.
 - Model ailesi: N-gram ile mini Transformer'ı aynı promptlar ve insan değerlendirmesiyle karşılaştırma.
 - Prompt hassasiyeti: Eğitim verisinde geçen ve geçmeyen başlangıçların çıktı kalitesine etkisi.

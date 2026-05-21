@@ -27,11 +27,11 @@ def main() -> None:
     result = post_json(
         f"{base_url}/api/generate",
         {
-            "model": "ngram",
+            "model": "ngram_omer",
             "prompt": "Bir sabah",
             "length": 120,
-            "temperature": 0.7,
-            "top_k": 8,
+            "temperature": 0.75,
+            "top_k": 12,
             "seed": 7,
         },
     )

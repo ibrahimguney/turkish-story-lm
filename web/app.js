@@ -20,6 +20,7 @@ async function loadModelStatus() {
     const response = await fetch("/api/models");
     const data = await response.json();
     const available = [];
+    if (data.ngram_omer) available.push("Ömer Seyfettin");
     if (data.ngram) available.push("N-gram");
     if (data.transformer) available.push("Transformer");
     modelStatus.textContent = available.length ? `${available.join(" + ")} hazır` : "Model bulunamadı";

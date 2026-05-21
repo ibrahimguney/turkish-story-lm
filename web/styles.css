@@ -140,7 +140,7 @@ input[type="range"] {
 
 .segmented {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
   margin: 0;
   padding: 0;
@@ -172,6 +172,7 @@ input[type="range"] {
   background: #ffffff;
   color: var(--muted);
   font-weight: 750;
+  text-align: center;
 }
 
 .segmented input:checked + span {
@@ -257,5 +258,9 @@ button:disabled {
 
   .output-shell {
     min-height: 420px;
+  }
+
+  .segmented {
+    grid-template-columns: 1fr;
   }
 }

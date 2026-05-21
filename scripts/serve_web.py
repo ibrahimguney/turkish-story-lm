@@ -13,6 +13,11 @@ from turkish_story_lm import NGramLanguageModel
 
 ROOT = Path(__file__).resolve().parents[1]
 WEB_ROOT = ROOT / "web"
+NGRAM_MODELS = {
+    "ngram": ROOT / "runs" / "ngram_tr.json",
+    "ngram_omer": ROOT / "runs" / "ngram_omer_seyfettin.json",
+}
+NGRAM_CACHE: dict[str, NGramLanguageModel] = {}
 
 
 class StoryLMHandler(SimpleHTTPRequestHandler):
@@ -27,7 +32,8 @@ class StoryLMHandler(SimpleHTTPRequestHandler):
         if parsed.path == "/api/models":
             self.write_json(
                 {
-                    "ngram": (ROOT / "runs" / "ngram_tr.json").exists(),
+                    "ngram": NGRAM_MODELS["ngram"].exists(),
+                    "ngram_omer": NGRAM_MODELS["ngram_omer"].exists(),
                     "transformer": (ROOT / "runs" / "transformer_tr.pt").exists(),
                 }
             )
@@ -78,11 +84,14 @@ def generate_story(payload: dict) -> str:
     if top_k < 1 or top_k > 64:
         raise ValueError("top_k must be between 1 and 64")
 
-    if model_name == "ngram":
-        model_path = ROOT / "runs" / "ngram_tr.json"
+    if model_name in NGRAM_MODELS:
+        model_path = NGRAM_MODELS[model_name]
         if not model_path.exists():
-            raise FileNotFoundError("runs/ngram_tr.json not found; train the n-gram model first")
-        model = NGramLanguageModel.load(model_path)
+            raise FileNotFoundError(f"{model_path.relative_to(ROOT)} not found; train the model first")
+        model = NGRAM_CACHE.get(model_name)
+        if model is None:
+            model = NGramLanguageModel.load(model_path)
+            NGRAM_CACHE[model_name] = model
         return model.generate(
             prompt=prompt,
             max_new_chars=length,
@@ -94,7 +103,7 @@ def generate_story(payload: dict) -> str:
     if model_name == "transformer":
         return generate_transformer(prompt, length, temperature, top_k, seed)
 
-    raise ValueError("model must be ngram or transformer")
+    raise ValueError("model must be ngram, ngram_omer, or transformer")
 
 
 def generate_transformer(
