@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Turkish Story LM</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <section class="workspace">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Turkish Story LM</p>
+            <h1>Türkçe Hikaye Üretici</h1>
+          </div>
+          <div id="modelStatus" class="status" aria-live="polite">Modeller yükleniyor</div>
+        </header>
+
+        <form id="generateForm" class="controls">
+          <div class="field wide">
+            <label for="prompt">Başlangıç</label>
+            <textarea id="prompt" name="prompt" rows="4">Bir sabah</textarea>
+          </div>
+
+          <fieldset class="segmented">
+            <legend>Model</legend>
+            <label>
+              <input type="radio" name="model" value="ngram" checked />
+              <span>N-gram</span>
+            </label>
+            <label>
+              <input type="radio" name="model" value="transformer" />
+              <span>Transformer</span>
+            </label>
+          </fieldset>
+
+          <div class="field">
+            <label for="length">Uzunluk <span id="lengthValue">600</span></label>
+            <input id="length" name="length" type="range" min="80" max="1600" step="20" value="600" />
+          </div>
+
+          <div class="field">
+            <label for="temperature">Sıcaklık <span id="temperatureValue">0.7</span></label>
+            <input id="temperature" name="temperature" type="range" min="0.2" max="1.4" step="0.1" value="0.7" />
+          </div>
+
+          <div class="field">
+            <label for="topK">Top-k</label>
+            <input id="topK" name="topK" type="number" min="1" max="64" value="8" />
+          </div>
+
+          <div class="field">
+            <label for="seed">Seed</label>
+            <input id="seed" name="seed" type="number" min="0" value="7" />
+          </div>
+
+          <div class="actions">
+            <button id="generateButton" type="submit">
+              <span aria-hidden="true">▶</span>
+              Üret
+            </button>
+            <button id="copyButton" type="button">
+              <span aria-hidden="true">⧉</span>
+              Kopyala
+            </button>
+          </div>
+        </form>
+
+        <section class="output-shell" aria-label="Üretilen hikaye">
+          <div class="output-meta">
+            <span id="outputLabel">Hazır</span>
+            <span id="charCount">0 karakter</span>
+          </div>
+          <article id="output" class="output" aria-live="polite"></article>
+        </section>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

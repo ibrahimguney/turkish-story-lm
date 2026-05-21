@@ -65,6 +65,20 @@ Transformer'i degerlendirin:
 python scripts/evaluate_transformer.py --model runs/transformer_tr.pt --data data/stories/tr_mini_stories.txt
 ```
 
+Yerel web arayuzunu acin:
+
+```bash
+python scripts/serve_web.py --port 7860
+```
+
+Tarayicida `http://127.0.0.1:7860` adresine gidin.
+
+Sunucu acikken hizli API testi:
+
+```bash
+python scripts/smoke_web.py
+```
+
 ## Proje Yapisi
 
 - `data/stories/tr_mini_stories.txt`: Baslangic icin kisa, ozgun Turkce hikayeler.
@@ -77,6 +91,9 @@ python scripts/evaluate_transformer.py --model runs/transformer_tr.pt --data dat
 - `scripts/train_transformer.py`: PyTorch Transformer egitim betigi.
 - `scripts/generate_transformer.py`: Transformer ile hikaye uretimi.
 - `scripts/evaluate_transformer.py`: Transformer icin kayip ve perplexity.
+- `scripts/serve_web.py`: Yerel web arayuzu ve uretim API'si.
+- `scripts/smoke_web.py`: Yerel web API icin hizli kontrol.
+- `web/`: Tarayicida calisan hikaye uretim arayuzu.
 - `research/bildiri_zemini.md`: Arastirma bildirisi icin problem, deneyler ve taslak.
 
 ## Deney Fikirleri
