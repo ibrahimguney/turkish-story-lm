@@ -35,20 +35,21 @@ class NGramLanguageModel:
         self.vocab: list[str] = []
 
     def fit(self, texts: Iterable[str]) -> None:
-        joined = "\n".join(text.strip() for text in texts if text.strip())
+        stories = [text.strip() for text in texts if text.strip()]
+        joined = "\n".join(stories)
         self.tokenizer = CharTokenizer.train(joined)
         self.vocab = self.tokenizer.vocab + [EOS]
 
-        for text in texts:
-            chars = list(text.strip())
-            if not chars:
-                continue
+        for text in stories:
+            chars = list(text)
             padded = [BOS] * (self.order - 1) + chars + [EOS]
             for idx in range(self.order - 1, len(padded)):
-                context = tuple(padded[idx - self.order + 1 : idx])
                 token = padded[idx]
-                self.counts[context][token] += 1
-                self.context_totals[context] += 1
+                max_context = self.order - 1
+                for context_size in range(max_context + 1):
+                    context = tuple(padded[idx - context_size : idx])
+                    self.counts[context][token] += 1
+                    self.context_totals[context] += 1
 
     def next_token_distribution(self, context: tuple[str, ...]) -> dict[str, float]:
         context = context[-(self.order - 1) :] if self.order > 1 else tuple()
